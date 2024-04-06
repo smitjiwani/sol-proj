@@ -1,15 +1,16 @@
 use anchor_lang::prelude::*;
 
-pub mod user;
 
-declare_id!("FCHAaa1jRgme9F4KegEoXYAyAHuCZG7FQCq4QFiwTfpc");
-
-#[program]
-pub mod some {
+pub mod user {
     use super::*;
 
     pub fn initialize(_ctx: Context<Initialize>) -> Result<()> {
         Ok(())
+    }
+
+    pub struct User {
+        pub name: String,
+        pub age: u8,
     }
 }
 
