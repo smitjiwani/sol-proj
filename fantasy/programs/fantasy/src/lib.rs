@@ -23,6 +23,26 @@ pub mod fantasy {
 
         Ok(())
     }
+
+    pub fn update_username(
+        ctx: Context<UpdateUsername>,
+        username: String,
+    ) -> Result<()> {
+        // Update username
+        let user_profile = &mut ctx.accounts.user_profile;
+        user_profile.username = username;
+        Ok(())
+    }
+
+    pub fn add_default_player(
+        ctx: Context<AddDefaultPlayer>,
+        player: Player,
+    ) -> Result<()> {
+        let user_profile = &mut ctx.accounts.user_profile; 
+        //set player times value of default players when they are used in fantasy teams 
+        user_profile.default_players.push(player);
+        Ok(())
+    }
 }
 
 #[derive(Accounts)]
@@ -38,6 +58,32 @@ pub struct InitializeUser<'info> {
         payer = authority,
         space = 8 + std::mem::size_of::<UserProfile>(),
     )]
+    pub user_profile: Box<Account<'info, UserProfile>>,
+
+    pub system_program: Program<'info, System>,
+}
+
+
+#[derive(Accounts)]
+#[instruction(username: String)]
+pub struct UpdateUsername<'info> {
+    #[account(mut)]
+    pub authority: Signer<'info>,
+
+    #[account(mut)]
+    pub user_profile: Box<Account<'info, UserProfile>>,
+
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+#[instruction(player: Player)]
+pub struct AddDefaultPlayer<'info> {
+    #[account(mut)]
+    pub authority: Signer<'info>,
+
+    #[account(mut)]
+
     pub user_profile: Box<Account<'info, UserProfile>>,
 
     pub system_program: Program<'info, System>,
